@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Transformation {
 
     private final int ID;
-    private double[][] transformMatrix = new double[4][4];
+    private final double[][] transformMatrix = new double[4][4];
 
     public Transformation(int ID){
         this.ID = ID;
