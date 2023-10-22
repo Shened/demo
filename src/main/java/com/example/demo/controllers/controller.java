@@ -2,22 +2,31 @@ package com.example.demo.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import com.example.demo.parser;
+import javafx.scene.control.ChoiceBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import org.controlsfx.control.tableview2.filter.parser.Parser;
-
+import com.example.demo.parser;
 import java.io.File;
 
 public class controller {
 
     @FXML
-    private Stage stage;
+    private ChoiceBox<String> selectionBox;
+
+    @FXML
+    public void initialize() {
+        // Populate the ChoiceBox
+        selectionBox.getItems().addAll("1", "2", "3");
+        selectionBox.setValue("1"); // Set default value
+
+        // Handle selection changes
+        selectionBox.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> {
+            System.out.println("Selected value: " + newValue);
+        });
+    }
 
     @FXML
     protected void start() {
-
+        // Your code here
     }
 
     public void loadFile(ActionEvent actionEvent) {
@@ -26,10 +35,9 @@ public class controller {
         fileChooser.setTitle("Escolher o ficheiro para o cenário");
 
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Arquivo de texto (*.txt)", "*.txt");
-
         fileChooser.getExtensionFilters().add(extensionFilter);
 
-        File selectedFile = fileChooser.showOpenDialog(stage);
+        File selectedFile = fileChooser.showOpenDialog(null);
 
         if(selectedFile != null){
             parser parser = new parser();
