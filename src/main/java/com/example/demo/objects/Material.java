@@ -18,7 +18,7 @@ public class Material {
         this.refraction = refraction;
         this.refractionIndex = refractionIndex;
     }
-    public Material(){
+    public Material(int size, double r, double g, double b, double ambient, double diffuse, double specular, double refraction, double refractionIndex){
         this.color = new Color3(0,0,0);
         this.ambient = 0;
         this.diffuse = 0;

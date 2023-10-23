@@ -1,11 +1,14 @@
 package com.example.demo.objects;
+import com.example.demo.entities.Hit;
+import com.example.demo.entities.Object3D;
+import com.example.demo.entities.Ray;
 import com.example.demo.entities.Vector3;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // Classe principal: TrianglesSegment
-public class Triangles {
+public class Triangles implements Object3D {
 
     // Campo para transformação
     private int transformation;
@@ -18,13 +21,19 @@ public class Triangles {
     }
 
     // Método para adicionar um triângulo à lista
-    public void addTriangle(int material, double x1, double y1, double z1,
-                            double x2, double y2, double z2,
-                            double x3, double y3, double z3) {
-        Triangle triangle = new Triangle(material, new Vector3(x1, y1, z1),
-                new Vector3(x2, y2, z2),
-                new Vector3(x3, y3, z3));
-        triangles.add(triangle);
+    public void addTriangle(int material, List<Vector3> vertices) {
+        if (vertices.size() % 3 != 0) {
+            throw new IllegalArgumentException("The number of vertices must be a multiple of 3 to form complete triangles.");
+        }
+
+        for (int i = 0; i < vertices.size(); i += 3) {
+            Vector3 v1 = vertices.get(i);
+            Vector3 v2 = vertices.get(i + 1);
+            Vector3 v3 = vertices.get(i + 2);
+
+            Triangle triangle = new Triangle(material, v1, v2, v3);
+            triangles.add(triangle);
+        }
     }
 
     // Getters e Setters para TrianglesSegment
@@ -38,6 +47,11 @@ public class Triangles {
 
     public List<Triangle> getTriangles() {
         return triangles;
+    }
+
+    @Override
+    public boolean intersect(Ray ray, Hit hit) {
+        return false;
     }
 
     // Classe interna: Triangle

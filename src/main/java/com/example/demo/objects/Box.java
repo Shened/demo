@@ -1,6 +1,10 @@
 package com.example.demo.objects;
 
-public class Box {
+import com.example.demo.entities.Hit;
+import com.example.demo.entities.Object3D;
+import com.example.demo.entities.Ray;
+
+public class Box implements Object3D {
 
     // Campos para transformação e material
     private int transformation;
@@ -26,5 +30,10 @@ public class Box {
 
     public void setMaterial(int material) {
         this.material = material;
+    }
+
+    @Override
+    public boolean intersect(Ray ray, Hit hit) {
+        return false;
     }
 }

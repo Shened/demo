@@ -1,11 +1,8 @@
 package com.example.demo.objects;
 
-import com.example.demo.entities.Hit;
-import com.example.demo.entities.Ray;
-import com.example.demo.entities.Vector3;
-import com.example.demo.entities.Vector4;
+import com.example.demo.entities.*;
 
-public class Sphere {
+public class Sphere implements Object3D {
 
     // Campos para transformação e material
     private int transformation;
@@ -31,5 +28,10 @@ public class Sphere {
 
     public void setMaterial(int material) {
         this.material = material;
+    }
+
+    @Override
+    public boolean intersect(Ray ray, Hit hit) {
+        return false;
     }
 }

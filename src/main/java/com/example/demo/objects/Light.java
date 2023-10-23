@@ -14,7 +14,7 @@ public class Light {
         this.lightColor = lightColor;
         this.lightPosition=lightPosition;
     }
-    public Light(){
+    public Light(int size, int transformationIndex, double r, double g, double b){
         this.transformationIndex = 0;
         this.lightColor = new Color3(0,0,0);
         this.lightPosition = new Vector3(0.0,0.0,0.0);
