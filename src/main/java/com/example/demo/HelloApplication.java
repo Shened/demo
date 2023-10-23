@@ -1,8 +1,8 @@
 package com.example.demo;
 
-import com.example.demo.entities.BoxSegment;
-import com.example.demo.entities.SphereSegment;
-import com.example.demo.entities.TrianglesSegment;
+import com.example.demo.objects.Box;
+import com.example.demo.objects.Sphere;
+import com.example.demo.objects.Triangles;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,7 +21,7 @@ public class HelloApplication extends Application {
 
 
         //CRIAR TRIANGULOS
-        TrianglesSegment segment = new TrianglesSegment(0);
+        Triangles segment = new Triangles(0);
 
         segment.addTriangle(3, -30, -6, -6, -18, -6, -6, -24, 0, 6);
         segment.addTriangle(3, -18, -6, -6, -18, 6, -6, -24, 0, 6);
@@ -31,14 +31,14 @@ public class HelloApplication extends Application {
         System.out.println("First Triangle's Material: " + segment.getTriangles().get(0).getMaterial());
 
         //CRIAR ESFERAS
-        SphereSegment sphere = new SphereSegment(0, 3);
+        Sphere sphere = new Sphere(0, 3);
 
         // Exemplo de uso dos getters
         System.out.println("Transformation: " + sphere.getTransformation());
         System.out.println("Material: " + sphere.getMaterial());
 
         //CRIAR BOX
-        BoxSegment box = new BoxSegment(0, 3);
+        Box box = new Box(0, 3);
 
         // Exemplo de uso dos getters
         System.out.println("Transformation: " + box.getTransformation());

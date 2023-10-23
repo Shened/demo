@@ -6,12 +6,30 @@ import com.example.demo.entities.Vector3;
 import com.example.demo.entities.Vector4;
 
 public class Sphere {
-    //Sphere {
-    //transformação // índice (integer >= 0)
-    //material // índice (integer >= 0)
-    //}
-    private int transformationIndex;
-    private int materialIndex;
-    private Vector3 center;
-    private double radius;
+
+    // Campos para transformação e material
+    private int transformation;
+    private int material;
+
+    public Sphere(int transformation, int material) {
+        this.transformation = transformation;
+        this.material = material;
+    }
+
+    // Getters e Setters para SphereSegment
+    public int getTransformation() {
+        return transformation;
+    }
+
+    public void setTransformation(int transformation) {
+        this.transformation = transformation;
+    }
+
+    public int getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(int material) {
+        this.material = material;
+    }
 }
