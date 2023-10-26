@@ -9,7 +9,7 @@ public class Ray {
         this.direction = direction.normalize();
     }
 
-    //Pontp de origem do raio
+    //Ponto de origem do raio
     public Vector3 getOrigin() {
         return origin;
     }
@@ -25,9 +25,5 @@ public class Ray {
 
     public void setDirection(Vector3 direction) {
         this.direction = direction;
-    }
-
-
-    public static void main(String[] args) {
     }
 }

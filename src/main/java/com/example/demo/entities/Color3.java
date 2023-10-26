@@ -12,6 +12,18 @@ public class Color3 {
         this.blue = Math.min(Math.max(blue, 0.0f), 1.0f);
     }
 
+    public Color3(){
+        this.red = 0;
+        this.green = 0;
+        this.blue = 0;
+    }
+
+    public void checkRange(){
+        this.red = Math.min(Math.max(this.red, 0), 1);
+        this.green = Math.min(Math.max(this.green, 0), 1);
+        this.blue = Math.min(Math.max(this.blue, 0), 1);
+    }
+
     // Métodos para obter os componentes RGB
     public float getRed() {
         return red;
