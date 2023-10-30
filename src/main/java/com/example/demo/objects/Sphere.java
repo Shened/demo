@@ -2,24 +2,19 @@ package com.example.demo.objects;
 
 import com.example.demo.entities.*;
 
-public class Sphere implements Object3D {
+public class Sphere extends Object3D {
 
     // Campos para transformação e material
-    private int transformation;
     private int material;
 
+    private double ray = 1;
+
+    private Vector3 position;
+
     public Sphere(int transformation, int material) {
-        this.transformation = transformation;
+        super(transformation);
         this.material = material;
-    }
-
-    // Getters e Setters para SphereSegment
-    public int getTransformation() {
-        return transformation;
-    }
-
-    public void setTransformation(int transformation) {
-        this.transformation = transformation;
+        this.position = new Vector3(0,0,0);
     }
 
     public int getMaterial() {
@@ -32,6 +27,35 @@ public class Sphere implements Object3D {
 
     @Override
     public boolean intersect(Ray ray, Hit hit) {
+        double R2 = ray.getOrigin().dot(ray.getOrigin());
+        double r2 = (this.ray * this.ray);
+
+        if(R2 <= r2) return false;
+
+        double tp = this.position.subtract(ray.getOrigin()).dot(ray.getDirection());
+
+        if(tp < 0) return false;
+
+        double distance2 = R2 - (tp * tp);
+
+        if(distance2 > r2) return false;
+
+        double t2 = r2 - distance2;
+
+        double t = tp - Math.sqrt(t2);
+
+        if(hit.getTmin() > t){
+            Vector3 P = ray.getOrigin().add(ray.getDirection().multiply(t));
+
+            hit.setT(t);
+            hit.setTmin(t);
+            hit.setPoint(P);
+            hit.setMaterial(this.material);
+            hit.setNormal(P.subtract(position));
+            hit.setFound(true);
+
+            return true;
+        }
         return false;
     }
 }

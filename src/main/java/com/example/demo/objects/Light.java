@@ -1,7 +1,9 @@
 package com.example.demo.objects;
 
 import com.example.demo.entities.Color3;
+import com.example.demo.entities.Transformation;
 import com.example.demo.entities.Vector3;
+import com.example.demo.entities.Vector4;
 
 public class Light {
     private int transformationIndex;
@@ -42,6 +44,11 @@ public class Light {
 
     public void setLightPosition(Vector3 lightPosition){
         this.lightPosition=lightPosition;
+    }
+
+    public void applyTransformation(Transformation transformation){
+        Vector4 vector4 = new Vector4(0,0,0,1);
+        this.lightPosition = transformation.applyTransformation(vector4);
     }
 }
 

@@ -6,11 +6,16 @@ import java.util.Scanner;
 public class Transformation {
 
     private final int ID;
-    private final double[][] transformMatrix = new double[4][4];
+    private double[][] transformMatrix = new double[4][4];
 
     public Transformation(int ID){
         this.ID = ID;
         identityMatrix();
+    }
+
+    public Transformation(int ID, double[][] transformMatrix){
+        this.ID = ID;
+        this.transformMatrix = transformMatrix;
     }
     public static void main(String[] args) {
         Transformation transformation = new Transformation(0);
@@ -189,6 +194,93 @@ public class Transformation {
         scaleMatrix[3][2] = 0.0;
         scaleMatrix[3][3] = 1.0;
         multiply3(scaleMatrix);
+    }
+
+    public double[][] multiplyMatrix(double[][] matrix) {
+        int rows1 = transformMatrix.length;
+        int cols1 = transformMatrix[0].length;
+        int cols2 = matrix[0].length;
+
+        if (cols1 != matrix.length) {
+            throw new IllegalArgumentException("Matrix dimensions are not compatible for multiplication.");
+        }
+
+        double[][] result = new double[rows1][cols2];
+
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols2; j++) {
+                double sum = 0.0;
+                for (int k = 0; k < cols1; k++) {
+                    sum += transformMatrix[i][k] * matrix[k][j];
+                }
+                result[i][j] = sum;
+            }
+        }
+
+        return result;
+    }
+
+    public double[][] getTransformMatrix() {
+        return transformMatrix;
+    }
+
+    public void invertMatrix() {
+        double[][] matrix = transformMatrix;
+        int n = matrix.length;
+        double[][] augmentedMatrix = new double[n][2 * n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                augmentedMatrix[i][j] = matrix[i][j];
+                augmentedMatrix[i][j + n] = (i == j) ? 1.0 : 0.0;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            int pivotRow = i;
+            for (int j = i + 1; j < n; j++) {
+                if (Math.abs(augmentedMatrix[j][i]) > Math.abs(augmentedMatrix[pivotRow][i])) {
+                    pivotRow = j;
+                }
+            }
+
+            double[] temp = augmentedMatrix[i];
+            augmentedMatrix[i] = augmentedMatrix[pivotRow];
+            augmentedMatrix[pivotRow] = temp;
+
+            double pivot = augmentedMatrix[i][i];
+
+            for (int j = 0; j < 2 * n; j++) {
+                augmentedMatrix[i][j] /= pivot;
+            }
+
+            for (int j = 0; j < n; j++) {
+                if (j != i) {
+                    double factor = augmentedMatrix[j][i];
+                    for (int k = 0; k < 2 * n; k++) {
+                        augmentedMatrix[j][k] -= factor * augmentedMatrix[i][k];
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(augmentedMatrix[i], n, matrix[i], 0, n);
+        }
+    }
+
+    public void transposeMatrix() {
+        int rows = this.transformMatrix.length;
+        int cols = this.transformMatrix[0].length;
+        double[][] transposedMatrix = new double[cols][rows];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                transposedMatrix[j][i] = this.transformMatrix[i][j];
+            }
+        }
+
+        this.transformMatrix = transposedMatrix;
     }
 }
 

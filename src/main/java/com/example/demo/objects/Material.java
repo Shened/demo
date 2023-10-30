@@ -10,6 +10,9 @@ public class Material {
     private double refraction;
     private double refractionIndex;
 
+    private Color3 ambientColor;
+    private Color3 diffuseColor;
+
     public Material(Color3 color, double ambient, double diffuse, double specular, double refraction, double refractionIndex) {
         this.color = color;
         this.ambient = ambient;
@@ -19,12 +22,12 @@ public class Material {
         this.refractionIndex = refractionIndex;
     }
     public Material(int size, double r, double g, double b, double ambient, double diffuse, double specular, double refraction, double refractionIndex){
-        this.color = new Color3(0,0,0);
-        this.ambient = 0;
-        this.diffuse = 0;
-        this.specular = 0;
-        this.refraction = 0;
-        this.refractionIndex = 0;
+        this.color = new Color3(r,g,b);
+        this.ambient = ambient;
+        this.diffuse = diffuse;
+        this.specular = specular;
+        this.refraction = refraction;
+        this.refractionIndex = refractionIndex;
     }
 
     public Color3 getColor() {
@@ -73,5 +76,21 @@ public class Material {
 
     public void setRefractionIndex(double refractionIndex) {
         this.refractionIndex = refractionIndex;
+    }
+
+    public void setAmbientColor() {
+        this.ambientColor = new Color3(this.color.getRed() * this.ambient, this.color.getGreen() * this.ambient, this.color.getBlue() * this.ambient);
+    }
+
+    public void setAmbientColor(Color3 ambientColor) {
+        this.ambientColor = ambientColor;
+    }
+
+    public void setDiffuseColor() {
+        this.diffuseColor = new Color3(this.color.getRed() * this.diffuse, this.color.getGreen() * this.diffuse, this.color.getBlue() * this.diffuse);
+    }
+
+    public void setDiffuseColor(Color3 diffuseColor) {
+        this.diffuseColor = diffuseColor;
     }
 }

@@ -8,37 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Classe principal: TrianglesSegment
-public class Triangles implements Object3D {
+public class Triangles extends Object3D {
 
     // Campo para transformação
     private int transformation;
 
     // Lista para armazenar os triângulos
-    private List<Triangle> triangles = new ArrayList<>();
+    private List<Triangle> trianglesList = new ArrayList<>();
 
     public Triangles(int transformation) {
-        this.transformation = transformation;
+        super(transformation);
     }
 
     // Método para adicionar um triângulo à lista
-    public void addTriangle(int material, List<Vector3> vertices) {
-        if (vertices.size() % 3 != 0) {
-            throw new IllegalArgumentException("The number of vertices must be a multiple of 3 to form complete triangles.");
-        }
-
-        for (int i = 0; i < vertices.size(); i += 3) {
-            Vector3 v1 = vertices.get(i);
-            Vector3 v2 = vertices.get(i + 1);
-            Vector3 v3 = vertices.get(i + 2);
-
-            Triangle triangle = new Triangle(material, v1, v2, v3);
-            triangles.add(triangle);
-        }
-    }
-
-    // Getters e Setters para TrianglesSegment
-    public int getTransformation() {
-        return transformation;
+    public void addTriangle(int materialIndex, Vector3 point1, Vector3 point2, Vector3 point3) {
+        trianglesList.add(new Triangle(materialIndex, point1, point2, point3));
     }
 
     public void setTransformation(int transformation) {
@@ -46,13 +30,13 @@ public class Triangles implements Object3D {
     }
 
     public List<Triangle> getTriangles() {
-        return triangles;
+        return trianglesList;
     }
 
     @Override
     public boolean intersect(Ray ray, Hit hit) {
         boolean found = false;
-        for (Triangle triangle: triangles) {
+        for (Triangle triangle: trianglesList) {
             Vector3 origin = ray.getOrigin();
             Vector3 direction = ray.getDirection();
 
@@ -165,7 +149,7 @@ public class Triangles implements Object3D {
             Vector3 ac = vertex3.subtract(vertex1);
             this.normal = ab.cross(ac);
             this.normal = this.normal.normalize();
-        }        // Getters e Setters para Triangle
+        }
 
         public Vector3 getNormal() {
             return normal;

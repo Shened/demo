@@ -6,6 +6,15 @@ public class Vector4 {
     private double z;
     private double w;
 
+    public Vector4 (Vector3 vector, double w){
+        this.x = vector.getX();
+        this.y = vector.getY();
+        this.z = vector.getZ();
+        if(w > 1) this.w = 1;
+        if(w < 0) this.w = 0;
+        if(w >= 0 && w <= 1) this.w = w;
+    }
+
     public Vector4(double x, double y, double z, double w) {
         this.x = x;
         this.y = y;
@@ -46,5 +55,10 @@ public class Vector4 {
     }
 
     public static void main(String[] args) {
+    }
+
+    public Vector3 getVector3(){
+        if(this.w == 0) return new Vector3(x,y,z);
+        return new Vector3(x/w, y/w, z/w);
     }
 }

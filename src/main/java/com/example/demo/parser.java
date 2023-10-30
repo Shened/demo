@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class parser {
@@ -99,7 +100,7 @@ public class parser {
                         case "Rz":
                             transformation.rotateZ(Double.parseDouble(variable[1]));
                             break;
-                        case "S":// ainda nao foi testada
+                        case "S":
                             transformation.scale(Double.parseDouble(variable[1]), Double.parseDouble(variable[2]), Double.parseDouble(variable[3]));
                             break;
                     }
@@ -167,19 +168,20 @@ public class parser {
 
             Triangles triangles = new Triangles(transformationIndex);
 
-            List<Vector3> vertices = new ArrayList<>();
+            for (int i = 1; i <= lines.size()-1; i++) {
+                int materialIndex = Integer.parseInt(lines.get(i).trim());
 
-            for (int i = 1; i < lines.size(); i++) {
-                String[] vertexValues = lines.get(i).trim().split(" ");
-                if (vertexValues.length >= 3) {
-                    double x = Double.parseDouble(vertexValues[0]);
-                    double y = Double.parseDouble(vertexValues[1]);
-                    double z = Double.parseDouble(vertexValues[2]);
-                    vertices.add(new Vector3(x, y, z));
+                List<Vector3> pointsList = new ArrayList<>();
+
+                int endCondicao = i+3;
+                while (i < endCondicao) {
+                    i++;
+                    String[] vertexes = lines.get(i).trim().split(" ");
+                    pointsList.add(new Vector3(Double.parseDouble(vertexes[0]), Double.parseDouble(vertexes[1]), Double.parseDouble(vertexes[2])));
                 }
-            }
 
-            triangles.addTriangle(transformationIndex, vertices);
+                triangles.addTriangle(materialIndex, pointsList.get(0), pointsList.get(1), pointsList.get(2));
+            }
 
             object3DList.add(triangles);
             return triangles;
@@ -213,5 +215,40 @@ public class parser {
 
     public List<Transformation> getTransformationList() {
         return transformationList;
+    }
+
+    public void setTransformations() {
+        Transformation cameraTransformation = transformationList.get(camera.getTransformationIndex());
+        for (Light light : lightList) {
+            Transformation lightTransformation = transformationList.get(light.getTransformationIndex());
+
+            Transformation lightFinalTransformation = new Transformation(-1, cameraTransformation.multiplyMatrix(lightTransformation.getTransformMatrix()));
+
+            light.applyTransformation(lightFinalTransformation);
+        }
+
+        for (Object3D object3D : object3DList) {
+
+            Transformation objectTransformation = transformationList.get(object3D.getObjectTransformationId());
+            Transformation objectFinalTransformation = new Transformation(-1, cameraTransformation.multiplyMatrix(objectTransformation.getTransformMatrix()));
+
+            object3D.setTransformation(objectFinalTransformation);
+
+            Transformation objectFinalTransformationInverted = new Transformation(-1, cameraTransformation.multiplyMatrix(objectTransformation.getTransformMatrix()));
+            objectFinalTransformationInverted.invertMatrix();
+
+            object3D.setInverseTransformation(objectFinalTransformationInverted);
+
+            Transformation objectFinalTransformationInvertedTransposed = new Transformation(-1, cameraTransformation.multiplyMatrix(objectTransformation.getTransformMatrix()));
+            objectFinalTransformationInvertedTransposed.invertMatrix();
+            objectFinalTransformationInvertedTransposed.transposeMatrix();
+
+            object3D.setTransposeInverseTransformation(objectFinalTransformationInvertedTransposed);
+        }
+
+        for (Material material : materialList) {
+            material.setAmbientColor();
+            material.setDiffuseColor();
+        }
     }
 }

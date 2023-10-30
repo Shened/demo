@@ -12,6 +12,7 @@ import javafx.stage.FileChooser;
 import com.example.demo.parser;
 
 import java.io.File;
+import java.util.Arrays;
 
 import org.apache.commons.math3.util.FastMath;
 
@@ -55,7 +56,7 @@ public class controller {
         if (selectedFile != null) {
             parser = new parser();
             parser.processFile(selectedFile);
-            System.out.println(((Triangles)parser.getObject3DList().get(3)).getTriangles().size());
+            parser.setTransformations();
         }
     }
 
@@ -89,11 +90,6 @@ public class controller {
                 Vector3 direction = new Vector3(x - 0.0, y - 0.0, z - distance);
                 Vector3 directionNormalized = direction.normalize();
 
-                //TESTE DOS VETORES DIRECAO
-                if (i < 10 && j < 10) {
-                    System.out.println("Vetor linha " + j + " coluna " + i + ":\nX:" + directionNormalized.getX() + "\nY:" + directionNormalized.getY() + "\nZ:" + directionNormalized.getZ());
-                }
-
                 Ray ray = new Ray(origin, directionNormalized);
                 Color3 color = traceRay(ray, Integer.parseInt(selectionBox.getValue()));
                 color.checkRange();
@@ -117,8 +113,28 @@ public class controller {
 
     public Color3 traceRay(Ray ray, int rec) {
         Hit hit = new Hit(false, Math.pow(10,12));
+        Vector4 origin = new Vector4(ray.getOrigin(), 1);
+        Vector4 direction = new Vector4(ray.getDirection(), 0);
+
         for (Object3D object : parser.getObject3DList()){
+            ray.setOrigin(object.getInverseTransformation().applyTransformation(origin));
+            ray.setDirection(object.getInverseTransformation().applyTransformation(direction));
+            ray.getDirection().normalize();
+
             boolean result = object.intersect(ray, hit);
+
+            /*if (result) {
+                Vector4 hitPoint = new Vector4(hit.getPoint(), 1);
+                hit.setPoint(object.getTransformation().applyTransformation(hitPoint));
+
+                Vector3 v = hit.getPoint().subtract(origin.getVector3());
+                hit.setT(v.length());
+                hit.setTmin(v.length());
+
+                Vector4 hitNormal = new Vector4(hit.getNormal(), 0);
+                hit.setNormal(object.getTransposeInverseTransformation().applyTransformation(hitNormal));
+                hit.getNormal().normalize();
+            }*/
         }
         if(hit.isFound()){
             return parser.getMaterialList().get(hit.getMaterial()).getColor();
