@@ -1,8 +1,7 @@
 package com.example.demo.controllers;
 
-import com.example.demo.entities.Color3;
-import com.example.demo.entities.Ray;
-import com.example.demo.entities.Vector3;
+import com.example.demo.entities.*;
+import com.example.demo.objects.Triangles;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -56,6 +55,7 @@ public class controller {
         if (selectedFile != null) {
             parser = new parser();
             parser.processFile(selectedFile);
+            System.out.println(((Triangles)parser.getObject3DList().get(3)).getTriangles().size());
         }
     }
 
@@ -116,6 +116,13 @@ public class controller {
     }
 
     public Color3 traceRay(Ray ray, int rec) {
-        return parser.getImage().getBackgroundColor();
+        Hit hit = new Hit(false, Math.pow(10,12));
+        for (Object3D object : parser.getObject3DList()){
+            boolean result = object.intersect(ray, hit);
+        }
+        if(hit.isFound()){
+            return parser.getMaterialList().get(hit.getMaterial()).getColor();
+        }
+        else return parser.getImage().getBackgroundColor();
     }
 }
