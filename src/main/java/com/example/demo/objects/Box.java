@@ -98,5 +98,42 @@ public class Box implements Object3D {
         if(zt2<tfar) tfar=zt2;
         if(tfar < 0 ) return false;
 
+        if(hit.getTmin() > tnear){
+
+            double intersectionX = ray.getOrigin().getX() + tnear * ray.getDirection().getX();
+            double intersectionY = ray.getOrigin().getY() + tnear * ray.getDirection().getY();
+            double intersectionZ = ray.getOrigin().getZ() + tnear * ray.getDirection().getZ();
+            Vector3 P = new Vector3(intersectionX, intersectionY, intersectionZ);
+
+            hit.setTmin(tnear);
+            hit.setT(tnear);
+            hit.setFound(true);
+            hit.setMaterial(this.material);
+            hit.setNormal(calculateNormal(P));
+            hit.setPoint(P);
+            return true;
+        }
+        return false;
+    }
+
+    public Vector3 calculateNormal(Vector3 intersectionPoint) {
+        double epsilon = 1e-6;
+
+        double cubeCentreX = origin.getX();
+        double cubeCentreY = origin.getY();
+        double cubeCentreZ = origin.getZ();
+        double dx = Math.abs(intersectionPoint.getX() - cubeCentreX);
+        double dy = Math.abs(intersectionPoint.getY() - cubeCentreY);
+        double dz = Math.abs(intersectionPoint.getZ() - cubeCentreZ);
+
+        if (Math.abs(dx - (aresta / 2)) < epsilon) {
+            return new Vector3(Math.signum(intersectionPoint.getX() - cubeCentreX), 0, 0);
+        } else if (Math.abs(dy - (aresta / 2)) < epsilon) {
+            return new Vector3(0, Math.signum(intersectionPoint.getY() - cubeCentreY), 0);
+        } else if (Math.abs(dz - (aresta / 2)) < epsilon) {
+            return new Vector3(0, 0, Math.signum(intersectionPoint.getZ() - cubeCentreZ));
+        } else {
+            return new Vector3(0, 0, 0);
+        }
     }
 }
